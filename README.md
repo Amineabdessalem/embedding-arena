@@ -24,15 +24,15 @@ shrinking vectors, next to the bytes each one stores per vector.
 - **int8 is almost free.** Per-dimension scaling keeps 98.8% of the true top-10
   at a quarter of the memory. For most systems it is the right default.
 - **Binary is a shortlist, not a search.** It is 32× smaller but keeps less than
-  half of the true neighbours, so use it to pre-select 10 to 20 times k
-  candidates and re-rank with int8 or float32.
+  half of the true neighbours, so it is worth trying as a first stage that
+  shortlists candidates for an int8 re-rank (not measured here; see the roadmap).
 - **PCA beats prefix truncation at equal size.** Real embeddings spread their
   variance unevenly, so keeping the principal directions loses far less than
   keeping the first coordinates. Truncation only works when the model was
   trained for it (Matryoshka embeddings), which these synthetic vectors are not.
-- **Recall, not the proxy, decides.** Mean squared error of the reconstruction
-  looked fine for PCA in earlier drafts; the ranking, which is what search uses,
-  did not.
+- **Judge by ranking, not reconstruction error.** Search only cares about the
+  order of neighbours, so these numbers are recall of the top 10, not how close
+  the decoded vectors are to the originals.
 
 ## Caveats
 
